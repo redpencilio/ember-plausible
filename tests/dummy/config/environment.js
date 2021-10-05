@@ -21,6 +21,17 @@ module.exports = function (environment) {
       // Here you can pass flags/options to your application instance
       // when it is created
     },
+
+    // Don't set enable to true since that makes the service tests fail
+    // TODO: find a solution for this
+    'ember-plausible': {
+      // enabled: true,
+      // domain: 'test.be',
+      // apiHost: 'http://localhost:8000',
+      // trackLocalhost: true,
+      // enableAutoPageviewTracking: false,
+      // enableAutoOutboundTracking: false,
+    },
   };
 
   if (environment === 'development') {

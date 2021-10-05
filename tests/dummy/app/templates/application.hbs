@@ -1,5 +1,14 @@
-{{page-title "Dummy"}}
+{{page-title 'ember-plausible'}}
 
-<h2 id="title">Welcome to Ember</h2>
+<LinkTo @route='index'>Index</LinkTo>
+<LinkTo @route='foo'>Foo</LinkTo>
+<LinkTo @route='foo.bar'>Bar</LinkTo>
+<LinkTo @route='baz'>Baz</LinkTo>
+
+<a
+  href='https://redpencil.io'
+  target='_blank'
+  rel='noopener noreferrer'
+>Outbound link</a>
 
 {{outlet}}
