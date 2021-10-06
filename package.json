@@ -1,13 +1,13 @@
 {
   "name": "ember-plausible",
   "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "An easy way to integrate Plausible into your Ember applications",
   "keywords": [
     "ember-addon"
   ],
-  "repository": "",
+  "repository": "https://github.com/redpencilio/ember-plausible",
   "license": "MIT",
-  "author": "",
+  "author": "redpencil.io",
   "directories": {
     "doc": "doc",
     "test": "tests"
