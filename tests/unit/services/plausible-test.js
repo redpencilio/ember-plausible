@@ -1,4 +1,4 @@
-import { module, skip, test } from 'qunit';
+import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
 import { preventAutoPlausibleEnable } from '../../utils/environment-config';
@@ -23,13 +23,13 @@ module('Unit | Service | plausible', function (hooks) {
     assert.ok(plausibleService._plausible);
   });
 
-  skip('it throws an error if no domain is specified', function (assert) {
+  test('it throws an error if no domain is specified', function (assert) {
     let plausibleService = this.owner.lookup('service:plausible');
 
-    // TODO: assert.throws doesn't work for async methods it seems
-    assert.throws(() => {
-      plausibleService.enable({});
-    });
+    assert.rejects(
+      plausibleService.enable({}),
+      /"domain" should be a string or an array of strings/
+    );
   });
 
   test('it combines an array of domains into a comma separated list', async function (assert) {
