@@ -126,6 +126,13 @@ export default class PlausibleService extends Service {
     let { default: Plausible } = await import('plausible-tracker');
     return Plausible;
   }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    this.disableAutoPageviewTracking();
+    this.disableAutoOutboundTracking();
+  }
 }
 
 function handleDomainConfig(domain) {

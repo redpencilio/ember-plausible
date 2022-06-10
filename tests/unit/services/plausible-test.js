@@ -1,3 +1,4 @@
+import { settled } from '@ember/test-helpers';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import sinon from 'sinon';
@@ -140,14 +141,38 @@ module('Unit | Service | plausible', function (hooks) {
 
     assert.ok(plausibleService._plausible.trackEvent.calledOnce);
   });
+
+  test('it cleans up any active autotrackers when the service is destroyed', async function (assert) {
+    let plausibleService = this.owner.lookup('service:plausible');
+
+    mockPlausiblePackage(plausibleService);
+
+    assert.equal(plausibleService._autoPageviewTrackingCleanup, null);
+    assert.equal(plausibleService._autoOutboundTrackingCleanup, null);
+
+    await plausibleService.enable({
+      domain: 'foo.test',
+      enableAutoPageviewTracking: true,
+      enableAutoOutboundTracking: true,
+    });
+
+    assert.ok(plausibleService._autoPageviewTrackingCleanup);
+    assert.ok(plausibleService._autoOutboundTrackingCleanup);
+
+    plausibleService.destroy();
+    await settled();
+
+    assert.equal(plausibleService._autoPageviewTrackingCleanup, null);
+    assert.equal(plausibleService._autoOutboundTrackingCleanup, null);
+  });
 });
 
 function mockPlausiblePackage(plausibleService) {
   const mockPlausible = sinon.fake.returns({
     trackEvent: sinon.fake(),
     trackPageview: sinon.fake(),
-    enableAutoPageviews: sinon.fake(),
-    enableAutoOutboundTracking: sinon.fake(),
+    enableAutoPageviews: sinon.fake.returns(() => {}),
+    enableAutoOutboundTracking: sinon.fake.returns(() => {}),
   });
 
   let fakeLoadPlausible = sinon.fake.resolves(mockPlausible);
