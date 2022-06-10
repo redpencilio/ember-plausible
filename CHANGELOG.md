@@ -1,4 +1,14 @@
 
+
+## v0.1.1 (2022-06-10)
+
+#### :bug: Bug Fix
+* [#13](https://github.com/redpencilio/ember-plausible/pull/13) Clean up any active autotrackers when the service is destroyed ([@Windvis](https://github.com/Windvis))
+
+#### Committers: 1
+- Sam Van Campenhout ([@Windvis](https://github.com/Windvis))
+
+
 ## v0.1.0 (2022-05-17)
 
 #### :rocket: Enhancement
