@@ -25,18 +25,8 @@ export default class PlausibleService extends Service {
     return Boolean(this._autoOutboundTrackingCleanup);
   }
 
-  get _shouldExcludeCurrentVisits() {
-    // Plausible supports ignoring the current browser if the `plausible_ignore` key is set in the localStorage
-    // More information https://plausible.io/docs/excluding-localstorage
-
-    // TODO: remove this code once implemented in the plausible-tracker package:
-    // https://github.com/plausible/plausible-tracker/issues/8
-
-    return localStorage.getItem('plausible_ignore') === 'true';
-  }
-
   async enable(options = {}) {
-    if (!this.isEnabled && !this._shouldExcludeCurrentVisits) {
+    if (!this.isEnabled) {
       let plausibleOptions = {
         ...DEFAULT_OPTIONS,
         ...options,
@@ -62,7 +52,7 @@ export default class PlausibleService extends Service {
   }
 
   trackPageview() {
-    if (this.isEnabled && !this._shouldExcludeCurrentVisits) {
+    if (this.isEnabled) {
       return new Promise((resolve) => {
         this._plausible.trackPageview(
           {},
@@ -80,7 +70,7 @@ export default class PlausibleService extends Service {
       typeof eventName === 'string'
     );
 
-    if (this.isEnabled && !this._shouldExcludeCurrentVisits) {
+    if (this.isEnabled) {
       return new Promise((resolve) => {
         this._plausible.trackEvent(eventName, { props, callback: resolve });
       });
@@ -88,11 +78,7 @@ export default class PlausibleService extends Service {
   }
 
   enableAutoPageviewTracking() {
-    if (
-      !this.isAutoPageviewTrackingEnabled &&
-      this.isEnabled &&
-      !this._shouldExcludeCurrentVisits
-    ) {
+    if (!this.isAutoPageviewTrackingEnabled && this.isEnabled) {
       this._autoPageviewTrackingCleanup = this._plausible.enableAutoPageviews();
     }
   }
@@ -105,11 +91,7 @@ export default class PlausibleService extends Service {
   }
 
   enableAutoOutboundTracking() {
-    if (
-      !this.isAutoOutboundTrackingEnabled &&
-      this.isEnabled &&
-      !this._shouldExcludeCurrentVisits
-    ) {
+    if (!this.isAutoOutboundTrackingEnabled && this.isEnabled) {
       this._autoOutboundTrackingCleanup =
         this._plausible.enableAutoOutboundTracking();
     }

@@ -99,21 +99,6 @@ module('Unit | Service | plausible', function (hooks) {
     assert.ok(plausibleService.enableAutoOutboundTracking.calledOnce);
   });
 
-  test("it doesn't track user activity if the plausible_ignore localStorage value is set", async function (assert) {
-    let plausibleService = this.owner.lookup('service:plausible');
-    localStorage.setItem('plausible_ignore', 'true');
-
-    mockPlausiblePackage(plausibleService);
-
-    await plausibleService.enable({
-      domain: 'foo.test',
-      enableAutoOutboundTracking: true,
-    });
-
-    assert.notOk(plausibleService.isEnabled);
-    localStorage.removeItem('plausible_ignore');
-  });
-
   test('it has a trackPageview method that calls the same method on the wrapped package', async function (assert) {
     let plausibleService = this.owner.lookup('service:plausible');
 
