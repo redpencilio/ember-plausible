@@ -11,34 +11,20 @@ module('Unit | Service | plausible', function (hooks) {
   // This means that the tests fail if `enabled` is set to true in the environment config, even if we overwrite that config in the hook.
   preventAutoPlausibleEnable(hooks);
 
-  test('it lazy-loads the plausible-tracker module', async function (assert) {
-    let plausibleService = this.owner.lookup('service:plausible');
-    sinon.spy(plausibleService, '_loadPlausible');
-
-    assert.notOk(plausibleService._plausible);
-    await plausibleService.enable({
-      domain: 'foo.test',
-    });
-
-    assert.ok(plausibleService._loadPlausible.calledOnce);
-    assert.ok(plausibleService._plausible);
-  });
-
   test('it throws an error if no domain is specified', function (assert) {
     let plausibleService = this.owner.lookup('service:plausible');
 
-    assert.rejects(
-      plausibleService.enable({}),
-      /"domain" should be a string or an array of strings/
-    );
+    assert.throws(() => {
+      plausibleService.enable({});
+    }, /"domain" should be a string or an array of strings/);
   });
 
   test('it combines an array of domains into a comma separated list', async function (assert) {
     let plausibleService = this.owner.lookup('service:plausible');
 
-    let { mockPlausible } = mockPlausiblePackage(plausibleService);
+    let mockPlausible = mockPlausiblePackage(plausibleService);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: ['foo.test', 'bar.test'],
     });
 
@@ -51,7 +37,7 @@ module('Unit | Service | plausible', function (hooks) {
 
     mockPlausiblePackage(plausibleService);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: 'foo.test',
     });
 
@@ -64,7 +50,7 @@ module('Unit | Service | plausible', function (hooks) {
 
     mockPlausiblePackage(plausibleService);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: 'foo.test',
       enableAutoPageviewTracking: false,
     });
@@ -78,7 +64,7 @@ module('Unit | Service | plausible', function (hooks) {
 
     mockPlausiblePackage(plausibleService);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: 'foo.test',
     });
 
@@ -91,7 +77,7 @@ module('Unit | Service | plausible', function (hooks) {
 
     mockPlausiblePackage(plausibleService);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: 'foo.test',
       enableAutoOutboundTracking: true,
     });
@@ -104,7 +90,7 @@ module('Unit | Service | plausible', function (hooks) {
 
     mockPlausiblePackage(plausibleService);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: 'foo.test',
     });
 
@@ -118,7 +104,7 @@ module('Unit | Service | plausible', function (hooks) {
 
     mockPlausiblePackage(plausibleService);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: 'foo.test',
     });
 
@@ -135,7 +121,7 @@ module('Unit | Service | plausible', function (hooks) {
     assert.equal(plausibleService._autoPageviewTrackingCleanup, null);
     assert.equal(plausibleService._autoOutboundTrackingCleanup, null);
 
-    await plausibleService.enable({
+    plausibleService.enable({
       domain: 'foo.test',
       enableAutoPageviewTracking: true,
       enableAutoOutboundTracking: true,
@@ -160,11 +146,7 @@ function mockPlausiblePackage(plausibleService) {
     enableAutoOutboundTracking: sinon.fake.returns(() => {}),
   });
 
-  let fakeLoadPlausible = sinon.fake.resolves(mockPlausible);
-  sinon.replace(plausibleService, '_loadPlausible', fakeLoadPlausible);
+  sinon.replace(plausibleService, '_createPlausibleTracker', mockPlausible);
 
-  return {
-    mockPlausible,
-    fakeLoadPlausible,
-  };
+  return mockPlausible;
 }

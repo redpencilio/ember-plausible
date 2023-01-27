@@ -1,5 +1,6 @@
 import Service from '@ember/service';
 import { assert } from '@ember/debug';
+import Plausible from 'plausible-tracker';
 
 // These default options extend the default options from the plausible-tracker package and mimics the behavior of the official script:
 // https://plausible-tracker.netlify.app/globals#plausibleinitoptions
@@ -25,7 +26,7 @@ export default class PlausibleService extends Service {
     return Boolean(this._autoOutboundTrackingCleanup);
   }
 
-  async enable(options = {}) {
+  enable(options = {}) {
     if (!this.isEnabled) {
       let plausibleOptions = {
         ...DEFAULT_OPTIONS,
@@ -34,9 +35,7 @@ export default class PlausibleService extends Service {
 
       let domain = handleDomainConfig(plausibleOptions.domain);
 
-      let Plausible = await this._loadPlausible();
-
-      this._plausible = Plausible({
+      this._plausible = this._createPlausibleTracker({
         ...plausibleOptions,
         domain,
       });
@@ -104,9 +103,8 @@ export default class PlausibleService extends Service {
     }
   }
 
-  async _loadPlausible() {
-    let { default: Plausible } = await import('plausible-tracker');
-    return Plausible;
+  _createPlausibleTracker(plausibleOptions) {
+    return Plausible(plausibleOptions);
   }
 
   willDestroy() {

@@ -20,7 +20,7 @@ ember install ember-plausible
 
 How it works
 ------------------------------------------------------------------------------
-`ember-plausible` provides a thin wrapper around the [plausible-tracker](https://github.com/plausible/plausible-tracker) npm package. It doesn't use the standalone Plausible script tag that is traditionally used when integrating Plausible. The tracker code will be part of the app bundle which has the benefit that ad-blockers can't block it. The package itself is lazy-loaded so it will only be downloaded by the browser if Plausible is actually enabled.
+`ember-plausible` provides a thin wrapper around the [plausible-tracker](https://github.com/plausible/plausible-tracker) npm package. It doesn't use the standalone Plausible script tag that is traditionally used when integrating Plausible. The tracker code will be part of the app bundle which has the benefit that ad-blockers can't block it.
 
 Configuration
 ------------------------------------------------------------------------------
@@ -126,9 +126,6 @@ Enable Plausible if it isn't already. This is only needed if you explicitly disa
 
 ###### options: `object`
 The options object to initialize Plausible with. These are _almost_ the same  as the [configuration options](#Configuration-options) in the `config/environment.js` file. The `enabled` option isn't needed here.
-
-###### Returns
-A `Promise` which resolves when the Plausible service is fully functional.
 
 ##### trackPageview
 Send a Pageview event (for the current page) to the API. This is useful if you want complete control over when pageview events are sent to the server.
