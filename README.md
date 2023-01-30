@@ -25,18 +25,20 @@ How it works
 
 Configuration
 ------------------------------------------------------------------------------
-`ember-plausible` can be configured by adding an options object to the `config/environment.js` file:
+`ember-plausible` can be started by calling the `enable` method on the `PlausibleService`.
 
 ```js
-// config/environment.js
-module.exports = function (environment) {
-  let ENV = {
-    // ...
-    'ember-plausible': {
-      // add options here
-    },
-  };
-};
+// app/routes/application.js
+import Route from '@ember/routing/route';
+import { service } from '@ember/service';
+
+export default class ApplicationRoute extends Route {
+  @service plausible;
+
+  beforeModel() {
+    this.plausible.enable({ /* options */ })
+  }
+}
 ```
 
 ### Configuration options
@@ -47,7 +49,6 @@ For more advanced use cases you can use the following options:
 
 | Name     | Description | Type | Default value | Required |
 | -------- | --------    | -------- | --------      | -------- |
-| enabled     | if `true`  or `"true"`, Plausible will be enabled and the needed code will be loaded | `boolean` or the string `"true"`     | `true` in production builds  | No |
 | domain | The domain(s) you want to link to the events | `string` or an [array of `string`s](https://plausible.io/docs/plausible-script#can-i-send-stats-to-multiple-dashboards-at-the-same-time)* | - | Yes |
 | apiHost | The URL of the Plausible instance | `string` | `https://plausible.io` | No |
 | trackLocalhost | if `true`, apps running on localhost will send events | `boolean` | `false` | No |

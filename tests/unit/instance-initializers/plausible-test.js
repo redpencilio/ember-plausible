@@ -6,6 +6,7 @@ import Resolver from 'ember-resolver';
 import { module, test } from 'qunit';
 import sinon from 'sinon';
 import { restorePlausibleConfig } from '../../utils/environment-config';
+import { getDeprecations } from '@ember/test-helpers';
 
 module('Unit | Instance Initializer | plausible', function (hooks) {
   hooks.beforeEach(function () {
@@ -35,6 +36,7 @@ module('Unit | Instance Initializer | plausible', function (hooks) {
     let plausible = getPlausibleServiceWithEnableStub(this.instance);
 
     await this.instance.boot();
+    console.log('getDeprecations', getDeprecations())
     assert.ok(plausible.enable.notCalled);
   });
 
