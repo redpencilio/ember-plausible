@@ -28,7 +28,7 @@ module('Unit | Service | plausible', function (hooks) {
       domain: ['foo.test', 'bar.test'],
     });
 
-    assert.equal(mockPlausible.lastArg.domain, 'foo.test,bar.test');
+    assert.strictEqual(mockPlausible.lastArg.domain, 'foo.test,bar.test');
   });
 
   test('it auto tracks pageviews', async function (assert) {
@@ -118,8 +118,8 @@ module('Unit | Service | plausible', function (hooks) {
 
     mockPlausiblePackage(plausibleService);
 
-    assert.equal(plausibleService._autoPageviewTrackingCleanup, null);
-    assert.equal(plausibleService._autoOutboundTrackingCleanup, null);
+    assert.strictEqual(plausibleService._autoPageviewTrackingCleanup, null);
+    assert.strictEqual(plausibleService._autoOutboundTrackingCleanup, null);
 
     plausibleService.enable({
       domain: 'foo.test',
@@ -133,8 +133,8 @@ module('Unit | Service | plausible', function (hooks) {
     plausibleService.destroy();
     await settled();
 
-    assert.equal(plausibleService._autoPageviewTrackingCleanup, null);
-    assert.equal(plausibleService._autoOutboundTrackingCleanup, null);
+    assert.strictEqual(plausibleService._autoPageviewTrackingCleanup, null);
+    assert.strictEqual(plausibleService._autoOutboundTrackingCleanup, null);
   });
 });
 

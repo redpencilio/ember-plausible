@@ -1,10 +1,8 @@
-ember-plausible
-==============================================================================
+# ember-plausible
 
 `ember-plausible` is an easy way to integrate and interact with [Plausible analytics](https://plausible.io/) in your Ember applications.
 
-Compatibility
-------------------------------------------------------------------------------
+## Compatibility
 
 * Ember.js v3.20 or above
 * Ember CLI v3.20 or above
@@ -12,8 +10,7 @@ Compatibility
 * ember-auto-import v2
 
 
-Installation
-------------------------------------------------------------------------------
+## Installation
 
 ```
 ember install ember-plausible
@@ -57,8 +54,7 @@ For more advanced use cases you can use the following options:
 
 \* linking events to multiple domains isn't supported yet by the latest stable release of Plausible analytics in case you host your own instance. Only enable this if you are using `https://plausible.io` as your API host or if you verified that your self-hosted version supports this feature.
 
-Usage
-------------------------------------------------------------------------------
+## Usage
 
 ### Custom event goals
 Plausible supports sending [custom events](https://plausible.io/docs/custom-event-goals) if you want to track things other than pageviews. To do this with `ember-plausible` you can use the [`trackEvent`](#trackEvent) method of the PlausibleService.
@@ -169,13 +165,11 @@ returns `true` if Plausible is automatically tracking page changes.
 ##### isAutoOutboundTrackingEnabled 
 returns `true` if Plausible is automatically tracking outbound link clicks.
 
-Contributing
-------------------------------------------------------------------------------
+## Contributing
 
 See the [Contributing](CONTRIBUTING.md) guide for details.
 
 
-License
-------------------------------------------------------------------------------
+## License
 
 This project is licensed under the [MIT License](LICENSE.md).

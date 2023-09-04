@@ -10,7 +10,8 @@ module.exports = async function () {
         name: 'ember-lts-3.20',
         npm: {
           devDependencies: {
-            'ember-source': '~3.20.5',
+            'ember-source': '~3.20.0',
+            'ember-qunit': '^5.0.0', // ember-qunit v6 has a peerDependency on Ember 3.28+
           },
         },
       },
@@ -18,56 +19,48 @@ module.exports = async function () {
         name: 'ember-lts-3.24',
         npm: {
           devDependencies: {
-            'ember-source': '~3.24.3',
+            'ember-source': '~3.24.0',
+            'ember-qunit': '^5.0.0', // ember-qunit v6 has a peerDependency on Ember 3.28+
+          },
+        },
+      },
+      {
+        name: 'ember-lts-3.28',
+        npm: {
+          devDependencies: {
+            'ember-source': '~3.28.0',
+          },
+        },
+      },
+      {
+        name: 'ember-lts-4.4',
+        npm: {
+          devDependencies: {
+            'ember-source': '~4.4.0',
           },
         },
       },
       {
         name: 'ember-release',
         npm: {
-          dependencies: {
-            'ember-auto-import': '^2.2.0',
-          },
           devDependencies: {
             'ember-source': await getChannelURL('release'),
-            webpack: '^5.57.1',
           },
         },
       },
       {
         name: 'ember-beta',
         npm: {
-          dependencies: {
-            'ember-auto-import': '^2.2.0',
-          },
           devDependencies: {
             'ember-source': await getChannelURL('beta'),
-            webpack: '^5.57.1',
           },
         },
       },
       {
         name: 'ember-canary',
         npm: {
-          dependencies: {
-            'ember-auto-import': '^2.2.0',
-          },
           devDependencies: {
             'ember-source': await getChannelURL('canary'),
-            webpack: '^5.57.1',
-          },
-        },
-      },
-      {
-        name: 'ember-default-with-jquery',
-        env: {
-          EMBER_OPTIONAL_FEATURES: JSON.stringify({
-            'jquery-integration': true,
-          }),
-        },
-        npm: {
-          devDependencies: {
-            '@ember/jquery': '^1.1.0',
           },
         },
       },
@@ -81,6 +74,9 @@ module.exports = async function () {
           }),
         },
         npm: {
+          devDependencies: {
+            'ember-source': '~3.28.0',
+          },
           ember: {
             edition: 'classic',
           },
