@@ -12,7 +12,7 @@ matrix:
 
 pipeline:
   ${scenario}:
-    image: danlynn/ember-cli:3.24.0
+    image: danlynn/ember-cli:5.8.0-node_20.12
     commands:
       - npm ci
       - npx ember try:one ${scenario}
