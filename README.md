@@ -6,7 +6,7 @@
 
 * Ember.js v4.12 or above
 * Ember CLI v4.12 or above
-* Node.js v14 or above
+* Node.js v18 or above
 * ember-auto-import v2
 
 
