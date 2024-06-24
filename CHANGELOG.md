@@ -1,3 +1,11 @@
+## v0.3.0 (2024-06-24)
+
+#### :boom: Breaking Change
+* [#28](https://github.com/redpencilio/ember-plausible/pull/28) Remove the auto config lookup ([@Windvis](https://github.com/Windvis))
+* [#27](https://github.com/redpencilio/ember-plausible/pull/27) Drop support for node 14 and 16 ([@Windvis](https://github.com/Windvis))
+* [#26](https://github.com/redpencilio/ember-plausible/pull/26) Drop support for all versions below Ember 4.12 ([@Windvis](https://github.com/Windvis))
+
+
 ## v0.2.0 (2023-01-30)
 
 #### :boom: Breaking Change
