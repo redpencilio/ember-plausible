@@ -16,45 +16,31 @@
 ember install ember-plausible
 ```
 
-How it works
-------------------------------------------------------------------------------
-`ember-plausible` provides a thin wrapper around the [plausible-tracker](https://github.com/plausible/plausible-tracker) npm package. It doesn't use the standalone Plausible script tag that is traditionally used when integrating Plausible. The tracker code will be part of the app bundle which has the benefit that ad-blockers can't block it.
-
-Configuration
-------------------------------------------------------------------------------
-`ember-plausible` can be configured by adding an options object to the `config/environment.js` file:
-
-```js
-// config/environment.js
-module.exports = function (environment) {
-  let ENV = {
-    // ...
-    'ember-plausible': {
-      // add options here
-    },
-  };
-};
-```
-
-### Configuration options
-
-If you want the same experience as the standalone Plausible script you only need to configure your domain name. Pageviews will automatically be tracked by default. 
-
-For more advanced use cases you can use the following options:
-
-| Name     | Description | Type | Default value | Required |
-| -------- | --------    | -------- | --------      | -------- |
-| enabled     | if `true`  or `"true"`, Plausible will be enabled and the needed code will be loaded | `boolean` or the string `"true"`     | `true` in production builds  | No |
-| domain | The domain(s) you want to link to the events | `string` or an [array of `string`s](https://plausible.io/docs/plausible-script#can-i-send-stats-to-multiple-dashboards-at-the-same-time)* | - | Yes |
-| apiHost | The URL of the Plausible instance | `string` | `https://plausible.io` | No |
-| trackLocalhost | if `true`, apps running on localhost will send events | `boolean` | `false` | No |
-| hashMode | if `true`, pageviews events will be sent when the URL hash changes. Enable this if you use the [`hash` Location'](https://guides.emberjs.com/release/configuring-ember/specifying-url-type/#toc_hash) option in Ember | `boolean` | `false` | No |
-| enableAutoPageviewTracking | if `true`, all page changes will send an event | `boolean` | `true` | No |
-| enableAutoOutboundTracking | if `true`, all clicks to external websites will send an event | `boolean` | `false` | No |
-
-\* linking events to multiple domains isn't supported yet by the latest stable release of Plausible analytics in case you host your own instance. Only enable this if you are using `https://plausible.io` as your API host or if you verified that your self-hosted version supports this feature.
+## How it works
+`ember-plausible` provides a thin wrapper around the [plausible-tracker](https://github.com/plausible/plausible-tracker) npm package. It doesn't use the standalone Plausible script tag that is traditionally used when integrating Plausible. The tracker code will be part of the app bundle which has the benefit that ad-blockers can't block it (but they might still block the API calls to the server).
 
 ## Usage
+
+### Getting started
+
+The easiest way to get started is to inject the service in your application route, and call the [`enable` method](#enable) with your config.
+
+```js
+// app/routes/application.js
+// .. imports
+
+export default class ApplicationRoute extends Route {
+  @service plausible;
+
+  beforeModel() {
+    this.plausible.enable({
+      domain: 'your-domain.be'
+      // other, optional options
+    });
+  }
+}
+```
+
 
 ### Custom event goals
 Plausible supports sending [custom events](https://plausible.io/docs/custom-event-goals) if you want to track things other than pageviews. To do this with `ember-plausible` you can use the [`trackEvent`](#trackEvent) method of the PlausibleService.
@@ -119,10 +105,25 @@ API
 
 #### Methods
 ##### enable
-Enable Plausible if it isn't already. This is only needed if you explicitly disable Plausible through the configuration options.
+Enable Plausible. 
 
 ###### options: `object`
-The options object to initialize Plausible with. These are _almost_ the same  as the [configuration options](#Configuration-options) in the `config/environment.js` file. The `enabled` option isn't needed here.
+The options object to initialize Plausible with.
+
+If you want the same experience as the standalone Plausible script you only need to configure your domain name. Pageviews will automatically be tracked by default. 
+
+For more advanced use cases you can use the following options:
+
+| Name     | Description | Type | Default value | Required |
+| -------- | --------    | -------- | --------      | -------- |
+| domain | The domain(s) you want to link to the events | `string` or an [array of `string`s](https://plausible.io/docs/plausible-script#can-i-send-stats-to-multiple-dashboards-at-the-same-time)* | - | Yes |
+| apiHost | The URL of the Plausible instance | `string` | `https://plausible.io` | No |
+| trackLocalhost | if `true`, apps running on localhost will send events | `boolean` | `false` | No |
+| hashMode | if `true`, pageviews events will be sent when the URL hash changes. Enable this if you use the [`hash` Location'](https://guides.emberjs.com/release/configuring-ember/specifying-url-type/#toc_hash) option in Ember | `boolean` | `false` | No |
+| enableAutoPageviewTracking | if `true`, all page changes will send an event | `boolean` | `true` | No |
+| enableAutoOutboundTracking | if `true`, all clicks to external websites will send an event | `boolean` | `false` | No |
+
+\* linking events to multiple domains isn't supported yet by the latest stable release of Plausible analytics in case you host your own instance. Only enable this if you are using `https://plausible.io` as your API host or if you verified that your self-hosted version supports this feature.
 
 ##### trackPageview
 Send a Pageview event (for the current page) to the API. This is useful if you want complete control over when pageview events are sent to the server.
@@ -143,7 +144,7 @@ The extra data that you want to send with your custom event.
 A `Promise` which resolves when the custom event is successfully sent.
 
 ##### enableAutoPageviewTracking
-Enable the functionality that automatically sends pageview events to the API. This is only needed iy you explicitly disable this functionality through the configuration options.
+Enable the functionality that automatically sends pageview events to the API. This is only needed if you explicitly disable this functionality through the configuration options.
 
 ##### disableAutoPageviewTracking
 Disable the functionality that automatically sends pageview events to the API.
