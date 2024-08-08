@@ -50,20 +50,18 @@ export default class PlausibleService extends Service {
     }
   }
 
-  trackPageview() {
+  trackPageview(eventData = {}, props = {}) {
     if (this.isEnabled) {
       return new Promise((resolve) => {
-        this._plausible.trackPageview(
-          {},
-          {
-            callback: resolve,
-          }
-        );
+        this._plausible.trackPageview(eventData, {
+          props,
+          callback: resolve,
+        });
       });
     }
   }
 
-  trackEvent(eventName, props = {}) {
+  trackEvent(eventName, props = {}, eventData = {}) {
     assert(
       assertMessage('"eventName" is required'),
       typeof eventName === 'string'
@@ -71,7 +69,11 @@ export default class PlausibleService extends Service {
 
     if (this.isEnabled) {
       return new Promise((resolve) => {
-        this._plausible.trackEvent(eventName, { props, callback: resolve });
+        this._plausible.trackEvent(
+          eventName,
+          { props, callback: resolve },
+          eventData
+        );
       });
     }
   }

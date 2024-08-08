@@ -128,6 +128,12 @@ For more advanced use cases you can use the following options:
 ##### trackPageview
 Send a Pageview event (for the current page) to the API. This is useful if you want complete control over when pageview events are sent to the server.
 
+###### [eventData](https://plausible-tracker.netlify.app/globals#plausibleoptions) (optional): `object`
+Extra event data you want to send
+
+###### props (optional): `object`
+The properties you want to bind to the event
+
 ###### Returns
 A `Promise` which resolves when the pageview event is successfully sent.
 
@@ -137,8 +143,11 @@ Send a custom event to the API.
 ###### eventName: `string`
 The name of the custom event. This is the value that you need to use when setting up custom goals in the Plausible dashboard.
 
-###### props: `object`
-The extra data that you want to send with your custom event.
+###### props (optional): `object`
+The properties you want to bind to the event
+
+###### [eventData](https://plausible-tracker.netlify.app/globals#plausibleoptions) (optional): `object`
+Extra event data you want to send
 
 ###### Returns
 A `Promise` which resolves when the custom event is successfully sent.
