@@ -1,13 +1,14 @@
 matrix:
   scenario:
+    - ember-lts-4.12
+    - ember-lts-5.8
     - ember-release
     - ember-beta
     - ember-canary
-    - embroider-safe
     - embroider-optimized
 
-pipeline:
-  ${scenario}:
+steps:
+  - name: ${scenario}
     image: danlynn/ember-cli:5.8.0-node_20.12
     commands:
       - npm ci
