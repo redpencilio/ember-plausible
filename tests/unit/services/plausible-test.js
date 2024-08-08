@@ -120,12 +120,12 @@ module('Unit | Service | plausible', function (hooks) {
     assert.strictEqual(
       callArgs.at(0),
       eventData,
-      'it passes the eventData argument into the trackPageview util'
+      'it passes the eventData argument into the trackPageview util',
     );
     assert.strictEqual(
       callArgs.at(1)?.props,
       props,
-      'it passes the props argument as options.props to the trackPageview util'
+      'it passes the props argument as options.props to the trackPageview util',
     );
   });
 
@@ -164,12 +164,12 @@ module('Unit | Service | plausible', function (hooks) {
     assert.strictEqual(
       callArgs.at(1)?.props,
       props,
-      'it passes the props argument as options.props to the trackPageview util'
+      'it passes the props argument as options.props to the trackPageview util',
     );
     assert.strictEqual(
       callArgs.at(2),
       eventData,
-      'it passes the eventData argument into the trackPageview util'
+      'it passes the eventData argument into the trackPageview util',
     );
   });
 
