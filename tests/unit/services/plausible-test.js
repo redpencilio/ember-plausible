@@ -99,6 +99,36 @@ module('Unit | Service | plausible', function (hooks) {
     assert.ok(plausibleService._plausible.trackPageview.calledOnce);
   });
 
+  test('trackPageview accepts extra eventData and props arguments', async function (assert) {
+    let plausibleService = this.owner.lookup('service:plausible');
+
+    mockPlausiblePackage(plausibleService);
+
+    plausibleService.enable({
+      domain: 'foo.test',
+    });
+
+    const eventData = {
+      url: 'https://foo-bar.baz',
+    };
+    const props = { foo: 'bar' };
+    plausibleService.trackPageview(eventData, props);
+
+    assert.ok(plausibleService._plausible.trackPageview.calledOnce);
+
+    const callArgs = plausibleService._plausible.trackPageview.firstCall.args;
+    assert.strictEqual(
+      callArgs.at(0),
+      eventData,
+      'it passes the eventData argument into the trackPageview util'
+    );
+    assert.strictEqual(
+      callArgs.at(1)?.props,
+      props,
+      'it passes the props argument as options.props to the trackPageview util'
+    );
+  });
+
   test('it has a trackEvent method that calls the same method on the wrapped package', async function (assert) {
     let plausibleService = this.owner.lookup('service:plausible');
 
@@ -111,6 +141,36 @@ module('Unit | Service | plausible', function (hooks) {
     plausibleService.trackEvent('foo');
 
     assert.ok(plausibleService._plausible.trackEvent.calledOnce);
+    assert.ok(plausibleService._plausible.trackEvent.calledWith('foo'));
+  });
+
+  test('trackEvent accepts extra props and eventData arguments', async function (assert) {
+    let plausibleService = this.owner.lookup('service:plausible');
+
+    mockPlausiblePackage(plausibleService);
+
+    plausibleService.enable({
+      domain: 'foo.test',
+    });
+
+    const eventData = {
+      url: 'https://foo-bar.baz',
+    };
+    const props = { foo: 'bar' };
+    plausibleService.trackEvent('foo', props, eventData);
+
+    assert.ok(plausibleService._plausible.trackEvent.calledOnce);
+    const callArgs = plausibleService._plausible.trackEvent.firstCall.args;
+    assert.strictEqual(
+      callArgs.at(1)?.props,
+      props,
+      'it passes the props argument as options.props to the trackPageview util'
+    );
+    assert.strictEqual(
+      callArgs.at(2),
+      eventData,
+      'it passes the eventData argument into the trackPageview util'
+    );
   });
 
   test('it cleans up any active autotrackers when the service is destroyed', async function (assert) {
