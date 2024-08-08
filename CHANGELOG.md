@@ -1,3 +1,9 @@
+## v0.4.0 (2024-08-08)
+
+#### :rocket: Enhancement
+* [#30](https://github.com/redpencilio/ember-plausible/pull/30) Pass through `eventData` and `props` ([@Windvis](https://github.com/Windvis))
+
+
 ## v0.3.0 (2024-06-24)
 
 #### :boom: Breaking Change
