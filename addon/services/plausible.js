@@ -64,7 +64,7 @@ export default class PlausibleService extends Service {
   trackEvent(eventName, props = {}, eventData = {}) {
     assert(
       assertMessage('"eventName" is required'),
-      typeof eventName === 'string'
+      typeof eventName === 'string',
     );
 
     if (this.isEnabled) {
@@ -72,7 +72,7 @@ export default class PlausibleService extends Service {
         this._plausible.trackEvent(
           eventName,
           { props, callback: resolve },
-          eventData
+          eventData,
         );
       });
     }
@@ -120,7 +120,7 @@ export default class PlausibleService extends Service {
 function handleDomainConfig(domain) {
   assert(
     assertMessage('"domain" should be a string or an array of strings'),
-    typeof domain === 'string' || Array.isArray(domain)
+    typeof domain === 'string' || Array.isArray(domain),
   );
 
   if (Array.isArray(domain)) {
