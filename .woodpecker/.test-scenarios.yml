@@ -1,7 +1,7 @@
 matrix:
   scenario:
     - ember-lts-4.12
-    - ember-lts-5.8
+    - ember-lts-5.12
     - ember-release
     - ember-beta
     - ember-canary
@@ -13,7 +13,7 @@ steps:
     commands:
       - corepack enable
       - pnpm install --frozen-lockfile
-      - pnpm exec ember try:one ${scenario} --skip-cleanup
+      - pnpm --filter test-app exec ember try:one ${scenario} --skip-cleanup
 
 when:
   event:

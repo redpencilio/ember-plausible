@@ -4,11 +4,8 @@
 
 ## Compatibility
 
-* Ember.js v4.12 or above
-* Ember CLI v4.12 or above
-* Node.js v18 or above
-* ember-auto-import v2
-
+- Ember.js v4.12 or above
+- Embroider or ember-auto-import v2
 
 ## Installation
 
@@ -17,6 +14,7 @@ ember install ember-plausible
 ```
 
 ## How it works
+
 `ember-plausible` provides a thin wrapper around the [plausible-tracker](https://github.com/plausible/plausible-tracker) npm package. It doesn't use the standalone Plausible script tag that is traditionally used when integrating Plausible. The tracker code will be part of the app bundle which has the benefit that ad-blockers can't block it (but they might still block the API calls to the server).
 
 ## Usage
@@ -34,15 +32,15 @@ export default class ApplicationRoute extends Route {
 
   beforeModel() {
     this.plausible.enable({
-      domain: 'your-domain.be'
+      domain: 'your-domain.be',
       // other, optional options
     });
   }
 }
 ```
 
-
 ### Custom event goals
+
 Plausible supports sending [custom events](https://plausible.io/docs/custom-event-goals) if you want to track things other than pageviews. To do this with `ember-plausible` you can use the [`trackEvent`](#trackEvent) method of the PlausibleService.
 
 #### Signup form example
@@ -57,7 +55,7 @@ import { action } from '@ember/object';
 export default class SignupComponent extends Component {
   @service plausible;
 
-  @action 
+  @action
   signup(event) {
     event.preventDefault();
 
@@ -71,7 +69,7 @@ export default class SignupComponent extends Component {
 ```hbs
 {{! app/components/signup.hbs }}
 
-<form {{on "submit" this.signup}}>
+<form {{on 'submit' this.signup}}>
   {{! form elements }}
 </form>
 ```
@@ -86,7 +84,8 @@ If we have multiple signup components in our app and we want to track which one 
 Plausible will then show the exact amount of signup events for each unique form.
 
 ### Tracking outbound link clicks
-Plausible makes it very easy to track outbound link clicks. To enable this functionality you need to set the `enableAutoOutboundTracking` option to `true`. 
+
+Plausible makes it very easy to track outbound link clicks. To enable this functionality you need to set the `enableAutoOutboundTracking` option to `true`.
 
 Alternatively you can call the [`enableAutoOutboundTracking`](#enableAutoOutboundTracking) method on the Plausible service if Plausible was already enabled without the option being set to `true`.
 
@@ -95,84 +94,104 @@ Once enabled, all external links in the app will send an event to your Plausible
 > There is an [open bug report](https://github.com/plausible/plausible-tracker/issues/12) which might affect your application. Be sure to double check that it doesn't affect you before enabling this functionality on production environments.
 
 ### Opt out from counting your own visits
+
 Since `ember-plausible` doesn't use a separate tracking script, [blocking that script with an ad-blocker](https://plausible.io/docs/excluding) isn't an option. [Plausible does provide an alternative option](https://plausible.io/docs/excluding-localstorage) which also works with this addon. You will have to reload the page after setting the localStorage value if Plausible was already enabled.
 
-API
-------------------------------------------------------------------------------
+## API
 
 ### Plausible Service
+
 `ember-plausible` uses the [plausible-tracker](https://github.com/plausible/plausible-tracker) package and exposes it as an easy-to-use service.
 
 #### Methods
+
 ##### enable
-Enable Plausible. 
+
+Enable Plausible.
 
 ###### options: `object`
+
 The options object to initialize Plausible with.
 
-If you want the same experience as the standalone Plausible script you only need to configure your domain name. Pageviews will automatically be tracked by default. 
+If you want the same experience as the standalone Plausible script you only need to configure your domain name. Pageviews will automatically be tracked by default.
 
 For more advanced use cases you can use the following options:
 
-| Name     | Description | Type | Default value | Required |
-| -------- | --------    | -------- | --------      | -------- |
-| domain | The domain(s) you want to link to the events | `string` or an [array of `string`s](https://plausible.io/docs/plausible-script#can-i-send-stats-to-multiple-dashboards-at-the-same-time)* | - | Yes |
-| apiHost | The URL of the Plausible instance | `string` | `https://plausible.io` | No |
-| trackLocalhost | if `true`, apps running on localhost will send events | `boolean` | `false` | No |
-| hashMode | if `true`, pageviews events will be sent when the URL hash changes. Enable this if you use the [`hash` Location'](https://guides.emberjs.com/release/configuring-ember/specifying-url-type/#toc_hash) option in Ember | `boolean` | `false` | No |
-| enableAutoPageviewTracking | if `true`, all page changes will send an event | `boolean` | `true` | No |
-| enableAutoOutboundTracking | if `true`, all clicks to external websites will send an event | `boolean` | `false` | No |
+| Name                       | Description                                                                                                                                                                                                           | Type                                                                                                                                       | Default value          | Required |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ | ---------------------- | -------- |
+| domain                     | The domain(s) you want to link to the events                                                                                                                                                                          | `string` or an [array of `string`s](https://plausible.io/docs/plausible-script#can-i-send-stats-to-multiple-dashboards-at-the-same-time)\* | -                      | Yes      |
+| apiHost                    | The URL of the Plausible instance                                                                                                                                                                                     | `string`                                                                                                                                   | `https://plausible.io` | No       |
+| trackLocalhost             | if `true`, apps running on localhost will send events                                                                                                                                                                 | `boolean`                                                                                                                                  | `false`                | No       |
+| hashMode                   | if `true`, pageviews events will be sent when the URL hash changes. Enable this if you use the [`hash` Location'](https://guides.emberjs.com/release/configuring-ember/specifying-url-type/#toc_hash) option in Ember | `boolean`                                                                                                                                  | `false`                | No       |
+| enableAutoPageviewTracking | if `true`, all page changes will send an event                                                                                                                                                                        | `boolean`                                                                                                                                  | `true`                 | No       |
+| enableAutoOutboundTracking | if `true`, all clicks to external websites will send an event                                                                                                                                                         | `boolean`                                                                                                                                  | `false`                | No       |
 
 \* linking events to multiple domains isn't supported yet by the latest stable release of Plausible analytics in case you host your own instance. Only enable this if you are using `https://plausible.io` as your API host or if you verified that your self-hosted version supports this feature.
 
 ##### trackPageview
+
 Send a Pageview event (for the current page) to the API. This is useful if you want complete control over when pageview events are sent to the server.
 
 ###### [eventData](https://plausible-tracker.netlify.app/globals#plausibleoptions) (optional): `object`
+
 Extra event data you want to send
 
 ###### props (optional): `object`
+
 The properties you want to bind to the event
 
 ###### Returns
+
 A `Promise` which resolves when the pageview event is successfully sent.
 
 ##### trackEvent
+
 Send a custom event to the API.
 
 ###### eventName: `string`
+
 The name of the custom event. This is the value that you need to use when setting up custom goals in the Plausible dashboard.
 
 ###### props (optional): `object`
+
 The properties you want to bind to the event
 
 ###### [eventData](https://plausible-tracker.netlify.app/globals#plausibleoptions) (optional): `object`
+
 Extra event data you want to send
 
 ###### Returns
+
 A `Promise` which resolves when the custom event is successfully sent.
 
 ##### enableAutoPageviewTracking
+
 Enable the functionality that automatically sends pageview events to the API. This is only needed if you explicitly disable this functionality through the configuration options.
 
 ##### disableAutoPageviewTracking
+
 Disable the functionality that automatically sends pageview events to the API.
 
 ##### enableAutoOutboundTracking
+
 Enable the functionality that automatically sends outbound click events to the API.
 
 ##### disableAutoOutboundTracking
+
 Disable the functionality that automatically sends outbound click events to the API.
 
-
 #### Properties
+
 ##### isEnabled
+
 returns `true` if the Plausible service was enabled by either the configuration option or calling `enable` directly.
 
 ##### isAutoPageviewTrackingEnabled
+
 returns `true` if Plausible is automatically tracking page changes.
 
-##### isAutoOutboundTrackingEnabled 
+##### isAutoOutboundTrackingEnabled
+
 returns `true` if Plausible is automatically tracking outbound link clicks.
 
 ## Contributing
