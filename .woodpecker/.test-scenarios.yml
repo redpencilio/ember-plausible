@@ -9,10 +9,11 @@ matrix:
 
 steps:
   - name: ${scenario}
-    image: danlynn/ember-cli:5.8.0-node_20.12
+    image: danlynn/ember-cli:6.2.1-node_22.14
     commands:
-      - npm ci
-      - npx ember try:one ${scenario}
+      - corepack enable
+      - pnpm install --frozen-lockfile
+      - pnpm exec ember try:one ${scenario} --skip-cleanup
 
 when:
   event:
