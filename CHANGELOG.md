@@ -1,5 +1,18 @@
 # Changelog
 
+## v0.5.0 (2025-03-24)
+
+#### :boom: Breaking Change
+* [#33](https://github.com/redpencilio/ember-plausible/pull/33) v2 addon conversion ([@Windvis](https://github.com/Windvis))
+
+#### :rocket: Enhancement
+* [#34](https://github.com/redpencilio/ember-plausible/pull/34) [DL-6554] Add TypeScript types ([@Windvis](https://github.com/Windvis))
+
+#### :house: Internal
+* [#32](https://github.com/redpencilio/ember-plausible/pull/32) Switch to pnpm ([@Windvis](https://github.com/Windvis))
+* [#31](https://github.com/redpencilio/ember-plausible/pull/31) Update to the Ember v5.10 blueprint ([@Windvis](https://github.com/Windvis))
+
+
 ## v0.4.0 (2024-08-08)
 
 #### :rocket: Enhancement
