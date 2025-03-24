@@ -55,8 +55,7 @@ export default {
     addon.gjs(),
 
     // Emit .d.ts declaration files
-    // TODO: enable this once we convert the code to TypeScript
-    // addon.declarations('declarations'),
+    addon.declarations('declarations'),
 
     // addons are allowed to contain imports of .css files, which we want rollup
     // to leave alone and keep in the published output.
