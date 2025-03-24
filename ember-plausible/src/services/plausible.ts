@@ -1,6 +1,9 @@
 import Service from '@ember/service';
 import { assert } from '@ember/debug';
-import Plausible from 'plausible-tracker';
+import Plausible, {
+  type EventOptions,
+  type PlausibleOptions,
+} from 'plausible-tracker';
 
 // These default options extend the default options from the plausible-tracker package and mimics the behavior of the official script:
 // https://plausible-tracker.netlify.app/globals#plausibleinitoptions
@@ -9,10 +12,24 @@ const DEFAULT_OPTIONS = {
   enableAutoOutboundTracking: false, // This requires an extension when using the script version: https://plausible.io/docs/script-extensions
 };
 
+type Options = PlausibleOptions & {
+  domain: string | string[];
+  enableAutoPageviewTracking?: boolean;
+  enableAutoOutboundTracking?: boolean;
+};
+
+type PlausibleInstance = ReturnType<typeof Plausible>;
+type AutoPageviewTrackingCleanup = ReturnType<
+  PlausibleInstance['enableAutoPageviews']
+>;
+type AutoOutboundTrackingCleanup = ReturnType<
+  PlausibleInstance['enableAutoOutboundTracking']
+>;
+
 export default class PlausibleService extends Service {
-  _plausible = null;
-  _autoPageviewTrackingCleanup = null;
-  _autoOutboundTrackingCleanup = null;
+  _plausible: PlausibleInstance | null = null;
+  _autoPageviewTrackingCleanup: AutoPageviewTrackingCleanup | null = null;
+  _autoOutboundTrackingCleanup: AutoOutboundTrackingCleanup | null = null;
 
   get isEnabled() {
     return Boolean(this._plausible);
@@ -26,14 +43,14 @@ export default class PlausibleService extends Service {
     return Boolean(this._autoOutboundTrackingCleanup);
   }
 
-  enable(options = {}) {
+  enable(options: Options) {
     if (!this.isEnabled) {
-      let plausibleOptions = {
+      const plausibleOptions = {
         ...DEFAULT_OPTIONS,
         ...options,
       };
 
-      let domain = handleDomainConfig(plausibleOptions.domain);
+      const domain = handleDomainConfig(plausibleOptions.domain);
 
       this._plausible = this._createPlausibleTracker({
         ...plausibleOptions,
@@ -50,10 +67,13 @@ export default class PlausibleService extends Service {
     }
   }
 
-  trackPageview(eventData = {}, props = {}) {
-    if (this.isEnabled) {
-      return new Promise((resolve) => {
-        this._plausible.trackPageview(eventData, {
+  trackPageview(
+    eventData: PlausibleOptions = {},
+    props: EventOptions['props'] = {},
+  ) {
+    if (this._plausible) {
+      return new Promise<void>((resolve) => {
+        this._plausible!.trackPageview(eventData, {
           props,
           callback: resolve,
         });
@@ -61,15 +81,19 @@ export default class PlausibleService extends Service {
     }
   }
 
-  trackEvent(eventName, props = {}, eventData = {}) {
+  trackEvent(
+    eventName: string,
+    props: EventOptions['props'] = {},
+    eventData: PlausibleOptions = {},
+  ) {
     assert(
       assertMessage('"eventName" is required'),
       typeof eventName === 'string',
     );
 
-    if (this.isEnabled) {
-      return new Promise((resolve) => {
-        this._plausible.trackEvent(
+    if (this._plausible) {
+      return new Promise<void>((resolve) => {
+        this._plausible!.trackEvent(
           eventName,
           { props, callback: resolve },
           eventData,
@@ -79,45 +103,45 @@ export default class PlausibleService extends Service {
   }
 
   enableAutoPageviewTracking() {
-    if (!this.isAutoPageviewTrackingEnabled && this.isEnabled) {
+    if (!this.isAutoPageviewTrackingEnabled && this._plausible) {
       this._autoPageviewTrackingCleanup = this._plausible.enableAutoPageviews();
     }
   }
 
   disableAutoPageviewTracking() {
-    if (this.isAutoPageviewTrackingEnabled) {
+    if (typeof this._autoPageviewTrackingCleanup === 'function') {
       this._autoPageviewTrackingCleanup();
       this._autoPageviewTrackingCleanup = null;
     }
   }
 
   enableAutoOutboundTracking() {
-    if (!this.isAutoOutboundTrackingEnabled && this.isEnabled) {
+    if (!this.isAutoOutboundTrackingEnabled && this._plausible) {
       this._autoOutboundTrackingCleanup =
         this._plausible.enableAutoOutboundTracking();
     }
   }
 
   disableAutoOutboundTracking() {
-    if (this.isAutoOutboundTrackingEnabled) {
+    if (typeof this._autoOutboundTrackingCleanup === 'function') {
       this._autoOutboundTrackingCleanup();
       this._autoOutboundTrackingCleanup = null;
     }
   }
 
-  _createPlausibleTracker(plausibleOptions) {
+  _createPlausibleTracker(plausibleOptions: PlausibleOptions) {
     return Plausible(plausibleOptions);
   }
 
   willDestroy() {
-    super.willDestroy(...arguments);
+    super.willDestroy();
 
     this.disableAutoPageviewTracking();
     this.disableAutoOutboundTracking();
   }
 }
 
-function handleDomainConfig(domain) {
+function handleDomainConfig(domain: string | string[]) {
   assert(
     assertMessage('"domain" should be a string or an array of strings'),
     typeof domain === 'string' || Array.isArray(domain),
@@ -130,6 +154,6 @@ function handleDomainConfig(domain) {
   return domain;
 }
 
-function assertMessage(message) {
+function assertMessage(message: string) {
   return `ember-plausible: ${message}`;
 }
